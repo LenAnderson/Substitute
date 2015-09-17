@@ -24,10 +24,12 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
         row.style.margin = '3px 0';
         var key = document.createElement('input');
         key.style.margin = '0 3px';
+        key.placeholder = 'key';
         key.value = rep.key;
         row.appendChild(key);
         var val = document.createElement('input');
         val.style.margin = '0 3px';
+        val.placeholder = 'value';
         val.value = rep.value;
         row.appendChild(val);
         var img = document.createElement('input');
@@ -56,9 +58,11 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
         row.style.margin = '3px 0';
         var key = document.createElement('input');
         key.style.margin = '0 3px';
+        key.placeholder = 'key';
         row.appendChild(key);
         var val = document.createElement('input');
         val.style.margin = '0 3px';
+        val.placeholder = 'value';
         row.appendChild(val);
         var img = document.createElement('input');
         img.style.margin = '0 3px';
