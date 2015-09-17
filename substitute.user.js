@@ -40,7 +40,6 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
         var lbl = document.createElement('label');
         lbl.textContent = ' image';
         row.appendChild(lbl);
-        dlg.appendChild(row);
         var del = document.createElement('button');
         del.style.margin = '0 0 0 15px';
         del.textContent = 'X';
@@ -48,6 +47,7 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
             row.remove();
         });
         row.appendChild(del);
+        dlg.appendChild(row);
     });
     var add = document.createElement('div');
     var addBtn = document.createElement('button');
@@ -71,6 +71,13 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
         var lbl = document.createElement('label');
         lbl.textContent = ' image';
         row.appendChild(lbl);
+        var del = document.createElement('button');
+        del.style.margin = '0 0 0 15px';
+        del.textContent = 'X';
+        del.addEventListener('click', function() {
+            row.remove();
+        });
+        row.appendChild(del);
         dlg.insertBefore(row,add);
     });
     add.appendChild(addBtn);
