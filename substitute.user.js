@@ -2,7 +2,7 @@
 // @name         Substitute
 // @namespace    https://github.com/LenAnderson/
 // @downloadURL  https://github.com/LenAnderson/Substitute/raw/master/substitute.user.js
-// @version      0.1
+// @version      0.2
 // @description  Replace text content with other text or images.
 // @author       LenAnderson
 // @match        *://*/*
