@@ -2,7 +2,7 @@
 // @name         Substitute
 // @namespace    https://github.com/LenAnderson/
 // @downloadURL  https://github.com/LenAnderson/Substitute/raw/master/substitute.user.js
-// @version      0.2
+// @version      0.3
 // @description  Replace text content with other text or images.
 // @author       LenAnderson
 // @match        *://*/*
@@ -18,6 +18,7 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
     var title = document.createElement('h2');
     title.textContent = 'Substitute - Preferences';
     dlg.appendChild(title);
+    var dict = JSON.parse(GM_getValue('substitute_dict') || '[]');
     dict.forEach(function(rep) {
         var row = document.createElement('div');
         row.classList.add('row');
@@ -97,6 +98,7 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
         dict = _dict;
         GM_setValue('substitute_dict', JSON.stringify(dict));
         dlgWindow.close();
+        substitute();
     });
     actions.appendChild(save);
     var cancel = document.createElement('button');
@@ -107,23 +109,31 @@ GM_registerMenuCommand('Substitute - Preferences', function() {
     dlg.appendChild(actions);
 });
 
-var dict = JSON.parse(GM_getValue('substitute_dict') || '[]');
-dict.forEach(function(rep) {
-    var nodes = document.evaluate('//text()[contains(., "'+rep.key.replace(/"/g,'\"')+'")]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    for(var i=0;i<nodes.snapshotLength;i++) {
-        var node = nodes.snapshotItem(i);
-        var parts = node.data.split(rep.key);
-        node.data = parts.pop();
-        parts.forEach(function(part) {
-            var sub;
-            if (rep.img) {
-                sub = document.createElement('img');
-                sub.src = rep.value;
-            } else {
-                sub = document.createTextNode(rep.value);
-            }
-            node.parentNode.insertBefore(sub, node);
-            node.parentNode.insertBefore(document.createTextNode(part), sub);
-        });
-    }
+function substitute() {
+    var dict = JSON.parse(GM_getValue('substitute_dict') || '[]');
+    dict.forEach(function(rep) {
+        var nodes = document.evaluate('//text()[contains(., "'+rep.key.replace(/"/g,'\"')+'")]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        for(var i=0;i<nodes.snapshotLength;i++) {
+            var node = nodes.snapshotItem(i);
+            var parts = node.data.split(rep.key);
+            node.data = parts.pop();
+            parts.forEach(function(part) {
+                var sub;
+                if (rep.img) {
+                    sub = document.createElement('img');
+                    sub.src = rep.value;
+                } else {
+                    sub = document.createTextNode(rep.value);
+                }
+                node.parentNode.insertBefore(sub, node);
+                node.parentNode.insertBefore(document.createTextNode(part), sub);
+            });
+        }
+    });
+}
+
+
+var mo = new MutationObserver(function(muts) {
+    substitute();
 });
+mo.observe(document.body, {childList:true, subtree:true});
