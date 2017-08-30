@@ -2,7 +2,7 @@
 // @name         Substitute
 // @namespace    https://github.com/LenAnderson/
 // @downloadURL  https://github.com/LenAnderson/Substitute/raw/master/substitute.user.js
-// @version      0.3
+// @version      0.4
 // @description  Replace text content with other text or images.
 // @author       LenAnderson
 // @match        *://*/*
@@ -115,6 +115,7 @@ function substitute() {
         var nodes = document.evaluate('//text()[contains(., "'+rep.key.replace(/"/g,'\"')+'")]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
         for(var i=0;i<nodes.snapshotLength;i++) {
             var node = nodes.snapshotItem(i);
+            if (node.isSubstitute) continue;
             var parts = node.data.split(rep.key);
             node.data = parts.pop();
             parts.forEach(function(part) {
@@ -125,6 +126,7 @@ function substitute() {
                 } else {
                     sub = document.createTextNode(rep.value);
                 }
+                sub.isSubstitute = true;
                 node.parentNode.insertBefore(sub, node);
                 node.parentNode.insertBefore(document.createTextNode(part), sub);
             });
